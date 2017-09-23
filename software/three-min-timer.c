@@ -27,8 +27,9 @@
 #define LED_PIN		8	/* PB0: 2-3 minutes */
 #define LED2_PIN	9	/* PB1: 1-2 minutes */
 #define LED3_PIN	10	/* PB2: 0-1 minutes */
-#define SND_PIN		11	/* PB3: Sound IC Power */
-#define SW_PIN		12	/* PB4: SW Input */
+/* You must change the PCMSK value to receive interrupt */
+#define SW_PIN		11	/* PB3: SW Input */
+#define SND_PIN		12	/* PB4: Sound IC Power */
 
 static int set_direction(int pin, int d)
 {
@@ -147,7 +148,7 @@ int main(int argc, char **argv)
 	OCR0A = 157;		/* 20ms@8MHz/1024, rounded up */
 	TIMSK |= _BV(OCIE0A);	/* Compare Match Interrupt Enable */
 	GIMSK |= _BV(PCIE);	/* PIN Change Interrupt Enable */
-	PCMSK |= 0x10;		/* Enable PB4 PIN Change Interrupt */
+	PCMSK |= 0x08;		/* Enable PB3 PIN Change Interrupt */
 	TCCR0A |= _BV(WGM01);	/* CTC: Clear Timer on Compare match mode */
 	TCCR0B |= 5;		/* pre-scaler /1024 */
 	TCNT0 = 0;
