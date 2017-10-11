@@ -135,6 +135,8 @@ ISR(PCINT0_vect)
 		set_port(LED2_PIN, 0);
 		set_port(LED3_PIN, 0);
 		set_port(SND_PIN, 0);
+		_20ms = 0;
+		elapsed_minutes = 0;
 	} else {
 		/* Start timer and switch LED on */
 		timer_started++;
