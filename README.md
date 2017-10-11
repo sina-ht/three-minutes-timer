@@ -36,13 +36,15 @@ Tested by the Author, but this schematic could be DANGEROUS.
 
 Add, change or modify to fulfill your needs and safety.
 
+No garber data.  You must create it or etch by yourself.
+
 
 How to use
 ----------
 
 + Adjust Makefile to find your toolchain.
 + Just type 'make' to compile for your target board.
-+ Run 'make install' to write to ATtiny85, adjust Makefile for changing other methods than the original.
++ Run 'make install' to write to ATtiny85.  Adjust Makefile for changing the method to your writer.
 + Push SW to start timer, then after 3 minutes, alarm go off, after 1 more minute, alarm will stop.
 + Pushing SW during timer working, device states will be reset.
 
