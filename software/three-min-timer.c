@@ -59,7 +59,7 @@ static int set_port(int pin, int d)
 		
 }
 
-static int get_port(int pin)
+static inline int get_port(int pin)
 {
 #if defined(DDRD)
         if (pin >= 0 && pin < 8) {
@@ -76,6 +76,19 @@ static int get_port(int pin)
 static int _20ms;
 static int timer_started;
 static int elapsed_minutes;
+
+static inline void timer_start(void)
+{
+	TCNT0 = 0;
+	TIMSK |= _BV(OCIE0A);	/* Compare Match Interrupt Enable */
+	timer_started = 1;
+}
+
+static void timer_stop(void)
+{
+	TIMSK &= ~_BV(OCIE0A);	/* Compare Match Interrupt Disable */
+	timer_started = 0;
+}
 
 /* Timer interrupt handler */
 ISR(TIM0_COMPA_vect)
@@ -100,7 +113,7 @@ ISR(TIM0_COMPA_vect)
 			break;
 		case 4:
 			set_port(SND_PIN, 0);
-			timer_started = 0;
+			timer_stop();
 			break;	
 		default:
 			break;
@@ -119,7 +132,7 @@ ISR(PCINT0_vect)
 
 	if (timer_started) {
 		/* When pushed during timer running, reset */
-		timer_started = 0;
+		timer_stop();
 		set_port(LED_PIN, 0);
 		set_port(LED2_PIN, 0);
 		set_port(LED3_PIN, 0);
@@ -128,7 +141,7 @@ ISR(PCINT0_vect)
 		elapsed_minutes = 0;
 	} else {
 		/* Start timer and switch LED on */
-		timer_started++;
+		timer_start();
 		set_port(LED_PIN, 1);
 	}
 }
@@ -137,7 +150,7 @@ int main(int argc, char **argv)
 {
 	cli();
 	OCR0A = 157;		/* 20ms@8MHz/1024, rounded up */
-	TIMSK |= _BV(OCIE0A);	/* Compare Match Interrupt Enable */
+	TIMSK &= ~_BV(OCIE0A);	/* Compare Match Interrupt Disable */
 	GIMSK |= _BV(PCIE);	/* PIN Change Interrupt Enable */
 	PCMSK |= 0x08;		/* Enable PB3 PIN Change Interrupt */
 	TCCR0A |= _BV(WGM01);	/* CTC: Clear Timer on Compare match mode */
