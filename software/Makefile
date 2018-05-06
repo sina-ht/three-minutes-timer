@@ -1,3 +1,8 @@
+# Three minutes timer firmware Makefile
+# Copyright(C) Hiroshi Takekawa
+#
+# SPDX-License-Identifier: GPL-2.0-only
+#
 ### Default settings
 # For Arduino SDK
 #export PATH := /pool/arduino/arduino-1.6.13/hardware/tools/avr/bin:$(PATH)
